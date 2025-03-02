@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700;800;900&display=swap");
+
+    body {
+      font-family: "poppins", sans-serif;
+      background-color: #50ffb0;
+      margin: 0px;
+    }
+    #root {
+      width: 100%;
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .inputBox {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input {
+      all: unset;
+      background-color: white;
+      font: bold;
+      width: 150px;
+      height: 50px;
+      border: solid black;
+      text-align: center;
+    }
+    .selectBox {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      background-color: #f9ff1f;
+      text-align: center;
+      border: solid black;
+      box-shadow: 5px 8px;
+      margin: 100px 0px 100px 0px;
+    }
+    .selectBtn {
+      all: unset;
+      font-family: "poppins", sans-serif;
+      width: 500px;
+      height: 50px;
+      font-weight: 600;
+      font-size: medium;
+      border-bottom: solid black;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      list-style: none;
+      padding: 0;
+      margin: 10px;
+    }
+    li {
+      margin: 3px;
+    }
+    li:hover {
+      background: black;
+      color: white;
+    }
+    h1 {
+      background-color: white;
+      width: 100%;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0px;
+      border-bottom: solid black;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #f9ff1f;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+      border: black;
+      border: solid black;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 50%;
+      transform: translateY(50%);
+      background-color: white;
+      -webkit-transition: 0.4s;
+      transition: 0.4s;
+      border: solid black;
+    }
+
+    input:checked + .slider {
+      background-color: #f9ff1f;
+      border: solid black;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #f9ff1f;
+      border: solid black;
+    }
+
+    input:checked + .slider:before {
+      transform: translate(18px, 50%);
+    }
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    .arrow-right {
+      margin-top: 20px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 0 5px 5px;
+      border-color: transparent transparent transparent #000000;
+      margin-top: 60px;
+    }
+    .arrow-left {
+      margin-top: 20px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 5px 5px 0;
+      border-color: transparent #000000 transparent transparent;
+      margin-top: 60px;
+    }
+    .resetIcon {
+      display: flex;
+      outline: none;
+      border: 2px solid #000;
+      width: 36px;
+      height: 36px;
+      padding: 4px;
+      cursor: pointer;
+      border-radius: 100px;
+      background-color: white;
+      transition: all 0.2s;
+    }
+    .resetIcon:hover {
+      transform: rotateZ(360deg) scale(1.1);
+    }
+
+    .btnBox {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+  </style>
+  <script type="text/babel">
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState(0);
+      const [flipped, setFlipped] = React.useState(false);
+      const onChange = (e) => {
+        setAmount(e.target.value);
+      };
+
+      const reset = () => {
+        setAmount(0);
+      };
+
+      const onFlipped = () => {
+        reset();
+        setFlipped((current) => !current);
+      };
+
+      return (
+        <div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <div className="inputBox">
+              <label htmlFor="minutes">Minutes</label>
+              <input
+                value={flipped ? amount * 60 : amount}
+                onChange={onChange}
+                id="minutes"
+                placeholder="Minutes"
+                type="number"
+                disabled={flipped}
+                style={{
+                  color: flipped ? "white" : "black",
+                  backgroundColor: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+            <div className={flipped ? "arrow-left" : "arrow-right"}></div>
+            <div className="inputBox">
+              <label htmlFor="hours">Hours</label>
+              <input
+                value={!flipped ? Math.round(amount / 60) : amount}
+                onChange={onChange}
+                id="hours"
+                placeholder="Hours"
+                type="number"
+                disabled={!flipped}
+                style={{
+                  backgroundColor: flipped ? "white" : "black",
+                  color: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="btnBox">
+            <div style={{ display: "flex", gap: "5px" }}>
+              <button className="resetIcon" onClick={reset}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0px"
+                  y="0px"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M 2 2 L 4.9394531 4.9394531 C 3.1262684 6.7482143 2 9.2427079 2 12 C 2 17.514 6.486 22 12 22 C 17.514 22 22 17.514 22 12 C 22 6.486 17.514 2 12 2 L 12 4 C 16.411 4 20 7.589 20 12 C 20 16.411 16.411 20 12 20 C 7.589 20 4 16.411 4 12 C 4 9.7940092 4.9004767 7.7972757 6.3496094 6.3496094 L 9 9 L 9 2 L 2 2 z"></path>
+                </svg>
+              </button>
+              <p style={{ marginTop: "5px" }}>reset</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" onClick={onFlipped} />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      );
+    }
+    function KmToMiles() {
+      const [amount, setAmount] = React.useState(0);
+      const [flipped, setFlipped] = React.useState(false);
+      const onChange = (e) => {
+        setAmount(e.target.value);
+        console.log(amount);
+      };
+      const reset = () => {
+        setAmount(0);
+      };
+      const onFlipped = () => {
+        reset();
+        setFlipped((current) => !current);
+      };
+
+      return (
+        <div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <div className="inputBox">
+              <label htmlFor="KM">KM</label>
+              <input
+                value={flipped ? amount * 1.609 : amount}
+                onChange={onChange}
+                id="KM"
+                placeholder="KM"
+                type="number"
+                disabled={flipped}
+                style={{
+                  color: flipped ? "white" : "black",
+                  backgroundColor: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+            <div className={flipped ? "arrow-left" : "arrow-right"}></div>
+            <div className="inputBox">
+              <label htmlFor="miles">Miles</label>
+              <input
+                value={flipped ? amount : amount / 1.609}
+                onChange={onChange}
+                id="miles"
+                placeholder="Miles"
+                type="number"
+                disabled={!flipped}
+                style={{
+                  backgroundColor: flipped ? "white" : "black",
+                  color: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="btnBox">
+            <div style={{ display: "flex", gap: "5px" }}>
+              <button className="resetIcon" onClick={reset}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0px"
+                  y="0px"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M 2 2 L 4.9394531 4.9394531 C 3.1262684 6.7482143 2 9.2427079 2 12 C 2 17.514 6.486 22 12 22 C 17.514 22 22 17.514 22 12 C 22 6.486 17.514 2 12 2 L 12 4 C 16.411 4 20 7.589 20 12 C 20 16.411 16.411 20 12 20 C 7.589 20 4 16.411 4 12 C 4 9.7940092 4.9004767 7.7972757 6.3496094 6.3496094 L 9 9 L 9 2 L 2 2 z"></path>
+                </svg>
+              </button>
+              <p style={{ marginTop: "5px" }}>reset</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" onClick={onFlipped} />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      );
+    }
+    function InchToCm() {
+      const [amount, setAmount] = React.useState(0);
+      const [flipped, setFlipped] = React.useState(false);
+      const onChange = (e) => {
+        setAmount(e.target.value);
+        console.log(amount);
+      };
+      const reset = () => {
+        setAmount(0);
+      };
+      const onFlipped = () => {
+        reset();
+        setFlipped((current) => !current);
+      };
+
+      return (
+        <div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <div className="inputBox">
+              <label htmlFor="CM">CM</label>
+              <input
+                value={flipped ? amount * 2.54 : amount}
+                onChange={onChange}
+                id="CM"
+                placeholder="CM"
+                type="number"
+                disabled={flipped}
+                style={{
+                  color: flipped ? "white" : "black",
+                  backgroundColor: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+            <div className={flipped ? "arrow-left" : "arrow-right"}></div>
+            <div className="inputBox">
+              <label htmlFor="inch">inch</label>
+              <input
+                value={flipped ? amount : amount / 2.54}
+                onChange={onChange}
+                id="inch"
+                placeholder="inch"
+                type="number"
+                disabled={!flipped}
+                style={{
+                  backgroundColor: flipped ? "white" : "black",
+                  color: flipped ? "black" : "white",
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="btnBox">
+            <div style={{ display: "flex", gap: "5px" }}>
+              <button className="resetIcon" onClick={reset}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0px"
+                  y="0px"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M 2 2 L 4.9394531 4.9394531 C 3.1262684 6.7482143 2 9.2427079 2 12 C 2 17.514 6.486 22 12 22 C 17.514 22 22 17.514 22 12 C 22 6.486 17.514 2 12 2 L 12 4 C 16.411 4 20 7.589 20 12 C 20 16.411 16.411 20 12 20 C 7.589 20 4 16.411 4 12 C 4 9.7940092 4.9004767 7.7972757 6.3496094 6.3496094 L 9 9 L 9 2 L 2 2 z"></path>
+                </svg>
+              </button>
+              <p style={{ marginTop: "5px" }}>reset</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" onClick={onFlipped} />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      );
+    }
+    function App() {
+      const [index, setIndex] = React.useState("default");
+      const [isOpen, setIsOpen] = React.useState(false);
+      const onSelect = (e) => {
+        const value = e.target.getAttribute("data-value");
+        setIndex(value);
+        setIsOpen(false);
+      };
+      const toggleDropdown = () => {
+        setIsOpen((current) => !current);
+      };
+      return (
+        <>
+          <h1>⭐Super Converter⭐</h1>
+          <div className="selectBox">
+            <button className="selectBtn" onClick={toggleDropdown}>
+              {index === "default" ? "Please Select your Unit" : index}
+            </button>
+            {isOpen && (
+              <ul className="list">
+                <li data-value="Minutes & Hours" onClick={onSelect}>
+                  Minutes & Hours
+                </li>
+                <li data-value="KM & Miles" onClick={onSelect}>
+                  KM & Miles
+                </li>
+                <li data-value="Inch & CM" onClick={onSelect}>
+                  Inch & CM
+                </li>
+              </ul>
+            )}
+          </div>
+
+          {index === "default" ? (
+            <img
+              src="./main_img.png"
+              style={{ margin: "50px" }}
+              alt="main image"
+              width="500px"
+            />
+          ) : null}
+          {index === "Minutes & Hours" ? <MinutesToHours /> : null}
+          {index === "KM & Miles" && <KmToMiles />}
+          {index === "Inch & CM" && <InchToCm />}
+        </>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
